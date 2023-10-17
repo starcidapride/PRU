@@ -11,8 +11,8 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
+  - Platform
+  - Bullet
   - 
   - 
   - 
@@ -49,4 +49,7 @@ TagManager:
     locked: 0
   - name: Front
     uniqueID: 966276211
+    locked: 0
+  - name: Bu let
+    uniqueID: 3657562295
     locked: 0
