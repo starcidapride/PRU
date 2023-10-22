@@ -11,10 +11,10 @@ TagManager:
   - 
   - Water
   - UI
-  - Platform
+  - Ground
+  - Entities
+  - No Collision
   - Bullet
-  - 
-  - 
   - 
   - 
   - 
@@ -41,15 +41,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Ground
+  - name: Background
     uniqueID: 3099859655
     locked: 0
-  - name: Player
+  - name: Ground
+    uniqueID: 2763602829
+    locked: 0
+  - name: Entities
     uniqueID: 234334831
     locked: 0
-  - name: Front
-    uniqueID: 966276211
-    locked: 0
-  - name: Bu let
-    uniqueID: 3657562295
+  - name: Bullet Container
+    uniqueID: 460566231
     locked: 0
