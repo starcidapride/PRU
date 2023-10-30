@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerManager : Singleton<PlayerManager>
 {
@@ -23,6 +24,10 @@ public class PlayerManager : Singleton<PlayerManager>
     [SerializeField]
     private Transform bullet;
 
+    private AudioSource source; 
+
+    [SerializeField]
+    private AudioClip shootSound;
     public int Health
     {
         get;
@@ -35,6 +40,7 @@ public class PlayerManager : Singleton<PlayerManager>
         _rigidbody = GetComponent<Rigidbody2D>();
         _collider = GetComponent<CapsuleCollider2D>();
         _animator = GetComponent<Animator>();
+        source = GetComponent<AudioSource>();
 
         IsBackward = false;
     }
@@ -80,6 +86,9 @@ public class PlayerManager : Singleton<PlayerManager>
 
     private IEnumerator ShootCoroutine()
     {
+        source.clip = shootSound;
+        source.Play();
+
         var bl = Instantiate(bullet);
         bl.position = transform.position + new Vector3(
               IsBackward ? -200 : +200,
@@ -114,7 +123,8 @@ public class PlayerManager : Singleton<PlayerManager>
         {
             Health = 0;
             _animator.SetTrigger("Dead");
-            LoadingSceneManager.Instance.LoadScene(SceneName.GameOver);
+            gameObject.layer = LayerMask.NameToLayer("No Collision");
+            SceneManager.LoadScene("GameOver");
         }
     }
 

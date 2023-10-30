@@ -19,8 +19,14 @@ public class ChomperManager : MonoBehaviour
     private bool isBackward;
     private int Health { get; set; } = 2;
 
+    private AudioSource _audioSource;
+
+    [SerializeField]
+    private AudioClip audioClip;
+
     private void Start()
     {
+        _audioSource = GetComponent<AudioSource>();
         _rigidbody = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _capsuleCollider = GetComponent<CapsuleCollider2D>();
@@ -37,7 +43,12 @@ public class ChomperManager : MonoBehaviour
 
         if (Mathf.Sqrt(distance.sqrMagnitude) < attackRanged)
         {
-              StartCoroutine(AttackCoroutine());
+            if (PlayerManager.Instance.Health > 0)
+            {
+                StartCoroutine(AttackCoroutine());
+
+            }
+              
         }
         else
         {
@@ -84,11 +95,15 @@ public class ChomperManager : MonoBehaviour
             Health -= 1;
         } else 
         {
+            _audioSource.clip = audioClip; _audioSource.Play();
+
             gameObject.layer = LayerMask.NameToLayer("No Collision");
 
             _animator.SetTrigger("Die");
             yield return new WaitForEndOfFrame();
             yield return new WaitUntil(() => _animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1f);
+
+            ScoreManager.Instance.Increase(2);
             Destroy(gameObject);
         }
     }

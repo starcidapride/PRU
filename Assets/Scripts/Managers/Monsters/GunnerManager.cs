@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class GunnerManager : MonoBehaviour
 {
@@ -26,8 +25,15 @@ public class GunnerManager : MonoBehaviour
     private bool isBackward;
     private int Health { get; set; } = 2;
 
+    private AudioSource _audioSource;
+
+    [SerializeField]
+    private AudioClip audioClip;
+
+
     private void Start()
     {   
+        _audioSource = GetComponent<AudioSource>();
         _rigidbody = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
         _capsuleCollider = GetComponent<CapsuleCollider2D>();
@@ -50,16 +56,20 @@ public class GunnerManager : MonoBehaviour
     {   
         if (!isDelay && IsGrounded())
         {
-            var projectileObject = Instantiate(projectile);
+            if (PlayerManager.Instance.Health > 0)
+            {
+                var projectileObject = Instantiate(projectile);
 
-            projectileObject.position = transform.position + new Vector3(
-                isBackward ? 100 : - 100,
-                100,
-                0);
-            
-            isDelay = true;
-            yield return new WaitForSeconds(delay);
-            isDelay = false;
+                projectileObject.position = transform.position + new Vector3(
+                    isBackward ? 100 : -100,
+                    100,
+                    0);
+
+                isDelay = true;
+                yield return new WaitForSeconds(delay);
+                isDelay = false;
+            }
+      
         }
     }
 
@@ -107,11 +117,14 @@ public class GunnerManager : MonoBehaviour
         }
         else
         {
+            _audioSource.clip = audioClip; _audioSource.Play();
             die = true;
             gameObject.layer = LayerMask.NameToLayer("No Collision");
             _animator.SetTrigger("Die");
             yield return new WaitForEndOfFrame();
             yield return new WaitUntil(() => _animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1f);
+
+            ScoreManager.Instance.Increase(2);
             Destroy(gameObject);
         }
     }
